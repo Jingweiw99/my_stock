@@ -1,6 +1,8 @@
 package com.wjw.stock.mapper;
 
 import com.wjw.stock.pojo.entity.SysUser;
+import com.wjw.stock.pojo.vo.req.LoginReqVo;
+import com.wjw.stock.pojo.vo.resp.LoginRespVo;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -28,4 +30,5 @@ public interface SysUserMapper {
      * @return
      */
     SysUser getUserByUserName(String userName);
+
 }
