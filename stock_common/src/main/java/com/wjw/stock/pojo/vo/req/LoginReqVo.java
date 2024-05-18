@@ -16,4 +16,8 @@ public class LoginReqVo {
      * 验证码
      */
     private String code;
+    /**
+     * 保存redis随机码的key，也就是sessionId (前端display: none，但是数据还是通过表单传递过来)
+     */
+    private String sessionId;
 }
