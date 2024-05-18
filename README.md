@@ -76,6 +76,16 @@ CommonConfig添加
 
 其中还抽取了一下常量
 
+## (5) 添加swagger的ui界面
+![image](https://github.com/Jingweiw99/my_stock/assets/101159761/8a7da454-bc47-4554-9e4f-9f922f864617)
+
+
+![image](https://github.com/Jingweiw99/my_stock/assets/101159761/c93504e8-2c7e-4c97-a372-75537cffbc32)
+
+在线测试通过，可以通过其他细致的注解，添加中文注释
+
+![image](https://github.com/Jingweiw99/my_stock/assets/101159761/c8ed2d6c-f160-49ff-ade8-e18d25762ca7)
+
 
 
 
