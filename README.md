@@ -87,6 +87,20 @@ CommonConfig添加
 ![image](https://github.com/Jingweiw99/my_stock/assets/101159761/c8ed2d6c-f160-49ff-ade8-e18d25762ca7)
 
 
+## (6) 添加knife4j
+增强swagger，如：增强ui，导出离线文档。访问/doc.html
+
+添加依赖
+
+![image](https://github.com/Jingweiw99/my_stock/assets/101159761/18604ec6-f00a-48f2-a86d-9eeec514860e)
+
+
+添加注解
+
+![image](https://github.com/Jingweiw99/my_stock/assets/101159761/4e0c2dc9-6307-44c3-aab0-6cd6b0db28dd)
+
+
+![image](https://github.com/Jingweiw99/my_stock/assets/101159761/b195f7be-f403-4027-b2e7-3a7d3717ac60)
 
 
 
