@@ -103,6 +103,14 @@ CommonConfig添加
 ![image](https://github.com/Jingweiw99/my_stock/assets/101159761/b195f7be-f403-4027-b2e7-3a7d3717ac60)
 
 
+## (7) 国内大盘指数功能
+1. 对展示域数据和常量封装
+
+![对展示域数据和常量数据封装](https://github.com/Jingweiw99/my_stock/assets/101159761/1a6cac1e-5a78-4681-af21-4ad6316d493c)
+
+2. 国内大盘指数功能代码
+
+![国内大盘指数功能代码](https://github.com/Jingweiw99/my_stock/assets/101159761/c839d270-2e72-4674-a5ca-6648bb12130a)
 
 
 
