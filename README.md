@@ -112,6 +112,9 @@ CommonConfig添加
 
 ![国内大盘指数功能代码](https://github.com/Jingweiw99/my_stock/assets/101159761/c839d270-2e72-4674-a5ca-6648bb12130a)
 
+## (8) 国内板块指数功能
+
+![国内板块指数功能](https://github.com/Jingweiw99/my_stock/assets/101159761/1539773b-95a8-4f30-9906-6cbf9ed173f5)
 
 
 
