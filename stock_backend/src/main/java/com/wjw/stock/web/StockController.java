@@ -1,6 +1,7 @@
 package com.wjw.stock.web;
 
 import com.wjw.stock.pojo.domain.InnerMarketDomain;
+import com.wjw.stock.pojo.domain.StockBlockDomain;
 import com.wjw.stock.service.StockService;
 import com.wjw.stock.vo.resp.R;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,14 @@ public class StockController {
     @GetMapping("/index/all")
     public R<List<InnerMarketDomain>> innerIndexAll(){
         return stockService.innerIndexAll();
+    }
+
+    /**
+     * 获取沪深两市最新数据，交易总金额降序查询，取前十条数据
+     * @return
+     */
+    @GetMapping("/sector/all")
+    public  R<List<StockBlockDomain>> sectorAll() {
+        return stockService.sectorAll();
     }
 }
