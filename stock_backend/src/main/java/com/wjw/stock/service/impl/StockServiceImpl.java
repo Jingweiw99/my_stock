@@ -1,14 +1,19 @@
 package com.wjw.stock.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.wjw.stock.mapper.StockBlockRtInfoMapper;
 import com.wjw.stock.mapper.StockBusinessMapper;
 import com.wjw.stock.mapper.StockMarketIndexInfoMapper;
+import com.wjw.stock.mapper.StockRtInfoMapper;
 import com.wjw.stock.pojo.domain.InnerMarketDomain;
 import com.wjw.stock.pojo.domain.StockBlockDomain;
 import com.wjw.stock.pojo.domain.StockInfoConfig;
+import com.wjw.stock.pojo.domain.StockUpdownDomain;
 import com.wjw.stock.pojo.entity.StockBusiness;
 import com.wjw.stock.service.StockService;
 import com.wjw.stock.utils.DateTimeUtil;
+import com.wjw.stock.vo.resp.PageResult;
 import com.wjw.stock.vo.resp.R;
 import com.wjw.stock.vo.resp.ResponseCode;
 import org.joda.time.DateTime;
@@ -28,6 +33,8 @@ public class StockServiceImpl implements StockService {
 
     @Autowired
     private StockMarketIndexInfoMapper stockMarketIndexInfoMapper;
+    @Autowired
+    private StockRtInfoMapper stockRtInfoMapper;
 
     @Autowired
     private StockInfoConfig stockInfoConfig;
@@ -58,13 +65,32 @@ public class StockServiceImpl implements StockService {
         //获取股票最新交易时间点
         Date lastDate = DateTimeUtil.getLastDate4Stock(DateTime.now()).toDate();
         //TODO mock数据,后续删除
-        lastDate=DateTime.parse("2021-12-21 14:30:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        lastDate = DateTime.parse("2021-12-21 14:30:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
         //1.调用mapper接口获取数据
-        List<StockBlockDomain> infos=stockBlockRtInfoMapper.sectorAll(lastDate);
+        List<StockBlockDomain> infos = stockBlockRtInfoMapper.sectorAll(lastDate);
         //2.组装数据
         if (CollectionUtils.isEmpty(infos)) {
             return R.error(ResponseCode.NO_RESPONSE_DATA.getMessage());
         }
         return R.ok(infos);
+    }
+
+    @Override
+    public R<PageResult> getStockPageInfo(Integer page, Integer pageSize) {
+        //1.设置PageHelper分页参数
+        PageHelper.startPage(page, pageSize);
+        //2.获取当前最新的股票交易时间点
+        Date curDate = DateTimeUtil.getLastDate4Stock(DateTime.now()).toDate();
+        // TODO: mock的数据，后续删除
+        curDate = DateTime.parse("2022-06-07 15:00:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        //3.调用mapper接口查询
+        List<StockUpdownDomain> infos = stockRtInfoMapper.getNewestStockInfo(curDate);
+        if (CollectionUtils.isEmpty(infos)) {
+            return R.error(ResponseCode.NO_RESPONSE_DATA);
+        }
+        //4.组装PageInfo对象，获取分页的具体信息,因为PageInfo包含了丰富的分页信息，而部分分页信息是前端不需要的
+        PageResult<StockUpdownDomain> pageResult = new PageResult<>(new PageInfo<>(infos));
+        //5.封装响应数据
+        return R.ok(pageResult);
     }
 }

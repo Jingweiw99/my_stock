@@ -1,6 +1,11 @@
 package com.wjw.stock.mapper;
 
+import com.wjw.stock.pojo.domain.StockUpdownDomain;
 import com.wjw.stock.pojo.entity.StockRtInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 /**
 * @author 21176
@@ -21,5 +26,7 @@ public interface StockRtInfoMapper {
     int updateByPrimaryKeySelective(StockRtInfo record);
 
     int updateByPrimaryKey(StockRtInfo record);
+
+    List<StockUpdownDomain> getNewestStockInfo(@Param("curDate") Date curDate);
 
 }
