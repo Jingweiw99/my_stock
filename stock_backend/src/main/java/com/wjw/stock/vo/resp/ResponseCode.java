@@ -1,4 +1,4 @@
-package com.wjw.stock.pojo.vo.resp;
+package com.wjw.stock.vo.resp;
 
 public enum ResponseCode {
     ERROR(0, "操作失败"),

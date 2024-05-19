@@ -1,4 +1,4 @@
-package com.wjw.stock.pojo.vo.req;
+package com.wjw.stock.vo.req;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.wjw.stock;
 
-import com.wjw.stock.pojo.vo.resp.R;
+import com.wjw.stock.vo.resp.R;
 import com.wjw.stock.web.SysUserController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,6 +2,8 @@ package com.wjw.stock.mapper;
 
 import com.wjw.stock.pojo.entity.StockBusiness;
 
+import java.util.List;
+
 /**
 * @author 21176
 * @description 针对表【stock_business(主营业务表)】的数据库操作Mapper
@@ -22,4 +24,5 @@ public interface StockBusinessMapper {
 
     int updateByPrimaryKey(StockBusiness record);
 
+//    List<StockBusiness> findAll();
 }
