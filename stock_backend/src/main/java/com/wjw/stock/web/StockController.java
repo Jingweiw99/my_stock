@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/quot")
@@ -51,5 +52,10 @@ public class StockController {
     public R<PageResult> getStockPageInfo(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
                                           @RequestParam(name = "pageSize", required = false, defaultValue = "20") Integer pageSize) {
         return stockService.getStockPageInfo(page, pageSize);
+    }
+
+    @GetMapping("/stock/updown/count")
+    public R<Map> getStockUpdownCount(){
+        return stockService.getStockUpdownCount();
     }
 }

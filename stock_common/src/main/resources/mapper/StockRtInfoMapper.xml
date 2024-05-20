@@ -48,6 +48,23 @@
         where cur_time = #{curDate}
         order by upDown desc
     </select>
+    <select id="getStockUpdownCount" resultType="java.util.Map">
+        select count(*) as count, date_format(cur_time, '%Y%m%d%H%i') as time
+        from (select (open_price - pre_close_price) / pre_close_price as ud,
+        cur_time
+        from stock_rt_info
+        where cur_time BETWEEN #{openTime} and #{curTime}
+        having ud
+        <if test="i == 0">
+            &lt;= -0.1
+        </if>
+        <if test="i == 1">
+            >= 0.1
+        </if>
+        ) as t1
+        group by time
+        order by time asc
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete

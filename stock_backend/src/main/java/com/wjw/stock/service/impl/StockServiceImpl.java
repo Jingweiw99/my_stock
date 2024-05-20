@@ -23,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+ import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("stockService")
 public class StockServiceImpl implements StockService {
@@ -92,5 +94,30 @@ public class StockServiceImpl implements StockService {
         PageResult<StockUpdownDomain> pageResult = new PageResult<>(new PageInfo<>(infos));
         //5.封装响应数据
         return R.ok(pageResult);
+    }
+
+    @Override
+    public R<Map> getStockUpdownCount() {
+        //1.获取最新的交易时间范围 openTime  curTime
+        //1.1 获取最新股票交易时间点
+        DateTime curDateTime = DateTimeUtil.getLastDate4Stock(DateTime.now());
+        Date curTime = curDateTime.toDate();
+        //TODO
+        curTime = DateTime.parse("2023-12-30 14:25:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        //1.2 获取最新交易时间对应的开盘时间
+        DateTime openDate = DateTimeUtil.getOpenDate(curDateTime);
+        Date openTime = openDate.toDate();
+        openTime = DateTime.parse("2021-12-30 09:30:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        //2.查询涨停数据
+        //约定mapper中flag入参： 1-》涨停数据 0：跌停
+        List<Map> upCounts = stockRtInfoMapper.getStockUpdownCount(openTime, curTime, 1);
+        //3.查询跌停数据
+        List<Map> dwCounts = stockRtInfoMapper.getStockUpdownCount(openTime, curTime, 0);
+        //4.组装数据
+        HashMap<String, List> mapInfo = new HashMap<>();
+        mapInfo.put("upList", upCounts);
+        mapInfo.put("downList", dwCounts);
+        //5.返回结果
+        return R.ok(mapInfo);
     }
 }
