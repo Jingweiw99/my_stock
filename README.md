@@ -138,6 +138,19 @@ CommonConfig添加
 ![个股分时涨跌幅度统计功能](https://github.com/Jingweiw99/my_stock/assets/101159761/a65be228-705f-4af9-90ce-d24b0900e14a)
 
 
+## (14) 个股分时图行情功能
+
+略
+
+## (15) 日k线单mapper接口实现
+
+![日k线单mapper接口实现](https://github.com/Jingweiw99/my_stock/assets/101159761/08c4f287-b60e-4cbe-9a20-a4f2bc92f1cb)
+
+## (16) 对日k线功能拆分
+
+后续分表分库的时候，比较方便
+
+![拆分后的日k线png](https://github.com/Jingweiw99/my_stock/assets/101159761/ab6d47af-7802-4875-89fd-e09755d2bf30)
 
 
 
