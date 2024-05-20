@@ -1,6 +1,7 @@
 package com.wjw.stock.web;
 
 import com.wjw.stock.pojo.domain.InnerMarketDomain;
+import com.wjw.stock.pojo.domain.Stock4MinuteDomain;
 import com.wjw.stock.pojo.domain.StockBlockDomain;
 import com.wjw.stock.service.StockService;
 import com.wjw.stock.vo.resp.PageResult;
@@ -84,5 +85,16 @@ public class StockController {
     @GetMapping("/stock/updown")
     public R<Map> getStockUpDown(){
         return stockService.stockUpDownScopeCount();
+    }
+
+    /**
+     * 功能描述：查询单个个股的分时行情数据，也就是统计指定股票T日每分钟的交易数据；
+     *         如果当前日期不在有效时间内，则以最近的一个股票交易时间作为查询时间点
+     * @param code 股票编码
+     * @return
+     */
+    @GetMapping("/stock/screen/time-sharing")
+    public R<List<Stock4MinuteDomain>> stockScreenTimeSharing(String code){
+        return stockService.stockScreenTimeSharing(code);
     }
 }

@@ -7,10 +7,7 @@ import com.wjw.stock.mapper.StockBlockRtInfoMapper;
 import com.wjw.stock.mapper.StockBusinessMapper;
 import com.wjw.stock.mapper.StockMarketIndexInfoMapper;
 import com.wjw.stock.mapper.StockRtInfoMapper;
-import com.wjw.stock.pojo.domain.InnerMarketDomain;
-import com.wjw.stock.pojo.domain.StockBlockDomain;
-import com.wjw.stock.pojo.domain.StockInfoConfig;
-import com.wjw.stock.pojo.domain.StockUpdownDomain;
+import com.wjw.stock.pojo.domain.*;
 import com.wjw.stock.pojo.entity.StockBusiness;
 import com.wjw.stock.service.StockService;
 import com.wjw.stock.utils.DateTimeUtil;
@@ -212,5 +209,29 @@ public class StockServiceImpl implements StockService {
         mapInfo.put("time", curDateStr);
         mapInfo.put("infos", mapss);
         return R.ok(mapInfo);
+    }
+
+    @Override
+    public R<List<Stock4MinuteDomain>> stockScreenTimeSharing(String code) {
+        //1.获取最近最新的交易时间点和对应的开盘日期
+        //1.1 获取最近有效时间点
+        DateTime lastDate4Stock = DateTimeUtil.getLastDate4Stock(DateTime.now());
+        Date endTime = lastDate4Stock.toDate();
+        //TODO mockdata
+        endTime = DateTime.parse("2021-12-30 14:47:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+
+        //1.2 获取最近有效时间点对应的开盘日期
+        DateTime openDateTime = DateTimeUtil.getOpenDate(lastDate4Stock);
+        Date startTime = openDateTime.toDate();
+        //TODO MOCK DATA
+        startTime = DateTime.parse("2021-12-30 09:30:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        //2.根据股票code和日期范围查询
+        List<Stock4MinuteDomain> list = stockRtInfoMapper.getStockInfoByCodeAndDate(code, startTime, endTime);
+        //判断非空处理
+        if (CollectionUtils.isEmpty(list)) {
+            list = new ArrayList<>();
+        }
+        //3.返回响应数据
+        return R.ok(list);
     }
 }

@@ -1,5 +1,6 @@
 package com.wjw.stock.mapper;
 
+import com.wjw.stock.pojo.domain.Stock4MinuteDomain;
 import com.wjw.stock.pojo.domain.StockUpdownDomain;
 import com.wjw.stock.pojo.entity.StockRtInfo;
 import org.apache.ibatis.annotations.Param;
@@ -33,4 +34,6 @@ public interface StockRtInfoMapper {
     List<Map> getStockUpdownCount(@Param("openTime") Date openTime, @Param("curTime") Date curTime, @Param("i") int i);
 
     List<Map> stockUpDownScopeCount(Date curDate);
+
+    List<Stock4MinuteDomain> getStockInfoByCodeAndDate(@Param("code") String code, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 }
