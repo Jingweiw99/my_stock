@@ -116,6 +116,17 @@ CommonConfig添加
 
 ![国内板块指数功能](https://github.com/Jingweiw99/my_stock/assets/101159761/1539773b-95a8-4f30-9906-6cbf9ed173f5)
 
+## (9) 涨幅榜更多数据功能
+
+略
+
+## (10) 涨跌停数据统计功能
+
+略
+
+## (11) easyexcel导出分页数据
+
+![excel导出分页数据](https://github.com/Jingweiw99/my_stock/assets/101159761/f2e6a90e-8b46-4575-be8d-fc4c7cecae3d)
 
 
 
