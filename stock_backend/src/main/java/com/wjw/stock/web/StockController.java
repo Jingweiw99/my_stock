@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +56,20 @@ public class StockController {
     }
 
     @GetMapping("/stock/updown/count")
-    public R<Map> getStockUpdownCount(){
+    public R<Map> getStockUpdownCount() {
         return stockService.getStockUpdownCount();
+    }
+
+    /**
+     * 将指定页的股票数据导出到excel表下
+     *
+     * @param response
+     * @param page     当前页
+     * @param pageSize 每页大小
+     */
+    @GetMapping("/stock/export")
+    public void stockExport(HttpServletResponse response, @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+                            @RequestParam(name = "pageSize", required = false, defaultValue = "20") Integer pageSize) {
+        stockService.stockExport(response, page, pageSize);
     }
 }

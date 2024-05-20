@@ -1,5 +1,6 @@
 package com.wjw.stock.service.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wjw.stock.mapper.StockBlockRtInfoMapper;
@@ -16,18 +17,22 @@ import com.wjw.stock.utils.DateTimeUtil;
 import com.wjw.stock.vo.resp.PageResult;
 import com.wjw.stock.vo.resp.R;
 import com.wjw.stock.vo.resp.ResponseCode;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
- import java.util.HashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service("stockService")
+@Slf4j
 public class StockServiceImpl implements StockService {
 
     @Autowired
@@ -119,5 +124,36 @@ public class StockServiceImpl implements StockService {
         mapInfo.put("downList", dwCounts);
         //5.返回结果
         return R.ok(mapInfo);
+    }
+
+    @Override
+    public void stockExport(HttpServletResponse response, Integer page, Integer pageSize) {
+        try {
+            //1.获取最近最新的一次股票有效交易时间点（精确分钟）
+            Date curDate = DateTimeUtil.getLastDate4Stock(DateTime.now()).toDate();
+            //TODO: 后续删掉
+            curDate = DateTime.parse("2021-12-30 09:47:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+            //2.设置分页参数
+            PageHelper.startPage(page, pageSize);
+            //3.查询
+            List<StockUpdownDomain> infos = stockRtInfoMapper.getNewestStockInfo(curDate);
+            //设置响应excel文件格式类型
+            response.setContentType("application/vnd.ms-excel");
+            //2.设置响应数据的编码格式
+            response.setCharacterEncoding("utf-8");
+            //3.设置默认的文件名称
+            // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+            String fileName = URLEncoder.encode("stockRt", "UTF-8");
+            //设置默认文件名称：兼容一些特殊浏览器
+            response.setHeader("content-disposition", "attachment;filename=" + fileName + ".xlsx");
+            //4.响应excel流
+            EasyExcel
+                    .write(response.getOutputStream(), StockUpdownDomain.class)
+                    .sheet("股票信息")
+                    .doWrite(infos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("当前导出数据异常，当前页：{},每页大小：{},异常信息：{}", page, pageSize, e.getMessage());
+        }
     }
 }
