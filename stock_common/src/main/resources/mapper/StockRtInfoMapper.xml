@@ -104,7 +104,7 @@
           and #{endTime}
     </select>
     <select id="getStockInfo4EvrDay" resultType="com.wjw.stock.pojo.domain.Stock4EvrDayDomain">
-        select sri2.cur_time        as date,
+        select sri2.cur_time as date,
        sri2.trade_amount    as tradeAmt,
        sri2.stock_code      as code,
        sri2.min_price       as lowPrice,
@@ -117,14 +117,43 @@
         from stock_rt_info as sri2
         where sri2.stock_code = #{code}
           and sri2.cur_time in (
-            select max(sri.cur_time) as closeDate
+            select max (sri.cur_time) as closeDate
             from stock_rt_info as sri
             where sri.stock_code = #{code}
-          and sri.cur_time between #{startTime} and #{endTime}
-            group by date_format(sri.cur_time, '%Y%m%d')
+          and sri.cur_time between #{startTime}
+          and #{endTime}
+            group by date_format(sri.cur_time
+            , '%Y%m%d')
             )
         order by sri2.cur_time
     </select>
+    <select id="getStockCloseDates" resultType="java.util.Date">
+        select max(sri.cur_time) as closeDate
+        from stock_rt_info as sri
+        where sri.stock_code = #{code}
+          and sri.cur_time between #{startTime} and #{endTime}
+        group by date_format(sri.cur_time, '%Y%m%d')
+    </select>
+    <select id="getStockInfo4Day2" resultType="com.wjw.stock.pojo.domain.Stock4EvrDayDomain">
+        select sri2.cur_time as date,
+        sri2.trade_amount as tradeAmt,
+        sri2.stock_code as code,
+        sri2.min_price as lowPrice,
+        sri2.stock_name as name,
+        sri2.max_price as highPrice,
+        sri2.open_price as openPrice,
+        sri2.trade_volume as tradeVol,
+        sri2.cur_price as closePrice,
+        sri2.pre_close_price as preClosePrice
+        from stock_rt_info as sri2
+        where sri2.stock_code = #{code}
+        and sri2.cur_time in
+        <foreach collection="dates" item="date" separator="," open="(" close=")">
+            #{date}
+        </foreach>
+        order by sri2.cur_time
+    </select>
+
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete

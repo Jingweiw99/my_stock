@@ -247,7 +247,10 @@ public class StockServiceImpl implements StockService {
         //TODO MOCKDATA
         startTime=DateTime.parse("2022-01-01 09:30:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
         //2.调用mapper接口获取查询的集合信息-方案1
-        List<Stock4EvrDayDomain> data= stockRtInfoMapper.getStockInfo4EvrDay(code,startTime,endTime);
+//        List<Stock4EvrDayDomain> data= stockRtInfoMapper.getStockInfo4EvrDay(code,startTime,endTime);
+        // 方案2
+        List<Date> closeDates =  stockRtInfoMapper.getStockCloseDates(code, startTime,endTime);
+        List<Stock4EvrDayDomain> data = stockRtInfoMapper.getStockInfo4Day2(code, closeDates);
         //3.组装数据，响应
         return R.ok(data);
     }
