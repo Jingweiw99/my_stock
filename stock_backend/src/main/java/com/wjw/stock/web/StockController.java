@@ -72,4 +72,8 @@ public class StockController {
                             @RequestParam(name = "pageSize", required = false, defaultValue = "20") Integer pageSize) {
         stockService.stockExport(response, page, pageSize);
     }
+    @GetMapping("/stock/tradeAmt")
+    public R<Map<String, List>> getTradeAmt() {
+        return stockService.getTradeAmt();
+    }
 }

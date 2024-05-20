@@ -26,10 +26,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("stockService")
 @Slf4j
@@ -155,5 +152,36 @@ public class StockServiceImpl implements StockService {
             e.printStackTrace();
             log.info("当前导出数据异常，当前页：{},每页大小：{},异常信息：{}", page, pageSize, e.getMessage());
         }
+    }
+
+    @Override
+    public R<Map<String, List>> getTradeAmt() {
+        DateTime lastDateTime = DateTimeUtil.getLastDate4Stock(DateTime.now());
+        DateTime openDateTime = DateTimeUtil.getOpenDate(lastDateTime);
+        // 转化为java中的Date
+        Date startTime4T = openDateTime.toDate();
+        Date endTime4T = lastDateTime.toDate();
+        // TODO: 这里是mock数据
+        startTime4T = DateTime.parse("2022-01-03 09:30:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        endTime4T = DateTime.parse("2022-01-03 14:40:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+
+        // 获取T-1日的区间范围
+        DateTime preLastDateTime = DateTimeUtil.getPreviousTradingDay(lastDateTime);
+        DateTime preOpenDateTime = DateTimeUtil.getOpenDate(preLastDateTime);
+        Date startTime4PreT = preOpenDateTime.toDate();
+        Date endTime4PreT = preLastDateTime.toDate();
+        //TODO  mock数据
+        startTime4PreT = DateTime.parse("2022-01-02 09:30:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        endTime4PreT = DateTime.parse("2022-01-02 14:40:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+
+        // 获取大盘的id
+        List<String> markedIds = stockInfoConfig.getInner();
+        // 当天数据和前天交易量数据
+        List<Map> data = stockMarketIndexInfoMapper.getTradeAmt(markedIds, startTime4T, endTime4T);
+        List<Map> data2 = stockMarketIndexInfoMapper.getTradeAmt(markedIds, startTime4PreT, endTime4PreT);
+        Map<String, List> info = new HashMap<>();
+        info.put("amtList", data);
+        info.put("yesAmtList", data2);
+        return R.ok(info);
     }
 }
