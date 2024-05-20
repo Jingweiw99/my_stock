@@ -17,5 +17,6 @@ public class StockInfoConfig {
      * 外盘相关编码集合
      */
     private List<String> outer;
-
+    //股票区间
+    private List<String> upDownRange;
 }

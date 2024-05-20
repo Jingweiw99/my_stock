@@ -31,4 +31,6 @@ public interface StockRtInfoMapper {
     List<StockUpdownDomain> getNewestStockInfo(@Param("curDate") Date curDate);
 
     List<Map> getStockUpdownCount(@Param("openTime") Date openTime, @Param("curTime") Date curTime, @Param("i") int i);
+
+    List<Map> stockUpDownScopeCount(Date curDate);
 }

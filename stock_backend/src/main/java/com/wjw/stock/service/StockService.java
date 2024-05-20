@@ -21,4 +21,6 @@ public interface StockService {
     void stockExport(HttpServletResponse response, Integer page, Integer pageSize);
 
     R<Map<String, List>> getTradeAmt();
+
+    R<Map> stockUpDownScopeCount();
 }

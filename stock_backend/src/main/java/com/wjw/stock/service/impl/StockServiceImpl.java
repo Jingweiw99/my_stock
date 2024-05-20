@@ -184,4 +184,33 @@ public class StockServiceImpl implements StockService {
         info.put("yesAmtList", data2);
         return R.ok(info);
     }
+
+    @Override
+    public R<Map> stockUpDownScopeCount() {
+        Date curDate = DateTimeUtil.getLastDate4Stock(DateTime.now()).toDate();
+        // TODO: mock data
+        curDate = DateTime.parse("2022-01-06 09:55:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:SS")).toDate();
+        List<Map> maps = stockRtInfoMapper.stockUpDownScopeCount(curDate);
+        HashMap<String, Object> mapInfo = new HashMap<>();
+        String curDateStr = curDate.toString();
+        List<String> rangeList = stockInfoConfig.getUpDownRange();
+        List<Map> mapss = new ArrayList<>();
+        for (String s : rangeList) {
+            Map info = null;
+            for (Map map : maps) {
+                if (map.containsValue(s)) {
+                    info = map;
+                }
+                if (info == null) {
+                    info = new HashMap();
+                    info.put("count", 0);
+                    info.put("title", s);
+                }
+            }
+            mapss.add(info);
+        }
+        mapInfo.put("time", curDateStr);
+        mapInfo.put("infos", mapss);
+        return R.ok(mapInfo);
+    }
 }

@@ -76,4 +76,13 @@ public class StockController {
     public R<Map<String, List>> getTradeAmt() {
         return stockService.getTradeAmt();
     }
+
+    /**
+     * 查询当前时间下股票的涨跌幅度区间统计功能
+     * @return
+     */
+    @GetMapping("/stock/updown")
+    public R<Map> getStockUpDown(){
+        return stockService.stockUpDownScopeCount();
+    }
 }
