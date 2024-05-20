@@ -1,6 +1,7 @@
 package com.wjw.stock.service;
 
 import com.wjw.stock.pojo.domain.InnerMarketDomain;
+import com.wjw.stock.pojo.domain.Stock4EvrDayDomain;
 import com.wjw.stock.pojo.domain.Stock4MinuteDomain;
 import com.wjw.stock.pojo.domain.StockBlockDomain;
 import com.wjw.stock.vo.resp.PageResult;
@@ -26,4 +27,6 @@ public interface StockService {
     R<Map> stockUpDownScopeCount();
 
     R<List<Stock4MinuteDomain>> stockScreenTimeSharing(String code);
+
+    R<List<Stock4EvrDayDomain>> stockCreenDkLine(String stockCode);
 }

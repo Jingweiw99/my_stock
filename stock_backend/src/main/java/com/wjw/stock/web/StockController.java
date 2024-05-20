@@ -1,6 +1,7 @@
 package com.wjw.stock.web;
 
 import com.wjw.stock.pojo.domain.InnerMarketDomain;
+import com.wjw.stock.pojo.domain.Stock4EvrDayDomain;
 import com.wjw.stock.pojo.domain.Stock4MinuteDomain;
 import com.wjw.stock.pojo.domain.StockBlockDomain;
 import com.wjw.stock.service.StockService;
@@ -96,5 +97,15 @@ public class StockController {
     @GetMapping("/stock/screen/time-sharing")
     public R<List<Stock4MinuteDomain>> stockScreenTimeSharing(String code){
         return stockService.stockScreenTimeSharing(code);
+    }
+
+    /**
+     * 日k线
+     * @param stockCode
+     * @return
+     */
+    @RequestMapping("/stock/screen/dkline")
+    public R<List<Stock4EvrDayDomain>> getDayKLinData(@RequestParam("code") String stockCode){
+        return stockService.stockCreenDkLine(stockCode);
     }
 }

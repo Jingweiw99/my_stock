@@ -1,5 +1,6 @@
 package com.wjw.stock.mapper;
 
+import com.wjw.stock.pojo.domain.Stock4EvrDayDomain;
 import com.wjw.stock.pojo.domain.Stock4MinuteDomain;
 import com.wjw.stock.pojo.domain.StockUpdownDomain;
 import com.wjw.stock.pojo.entity.StockRtInfo;
@@ -36,4 +37,6 @@ public interface StockRtInfoMapper {
     List<Map> stockUpDownScopeCount(Date curDate);
 
     List<Stock4MinuteDomain> getStockInfoByCodeAndDate(@Param("code") String code, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    List<Stock4EvrDayDomain> getStockInfo4EvrDay(@Param("code") String code, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 }

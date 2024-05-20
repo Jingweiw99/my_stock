@@ -4,11 +4,9 @@ import com.alibaba.excel.EasyExcel;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wjw.stock.mapper.StockBlockRtInfoMapper;
-import com.wjw.stock.mapper.StockBusinessMapper;
 import com.wjw.stock.mapper.StockMarketIndexInfoMapper;
 import com.wjw.stock.mapper.StockRtInfoMapper;
 import com.wjw.stock.pojo.domain.*;
-import com.wjw.stock.pojo.entity.StockBusiness;
 import com.wjw.stock.service.StockService;
 import com.wjw.stock.utils.DateTimeUtil;
 import com.wjw.stock.vo.resp.PageResult;
@@ -233,5 +231,24 @@ public class StockServiceImpl implements StockService {
         }
         //3.返回响应数据
         return R.ok(list);
+    }
+
+    @Override
+    public R<List<Stock4EvrDayDomain>> stockCreenDkLine(String code) {
+        //1.获取查询的日期范围
+        //1.1 获取截止时间
+        DateTime endDateTime = DateTimeUtil.getLastDate4Stock(DateTime.now());
+        Date endTime = endDateTime.toDate();
+        //TODO MOCKDATA
+        endTime=DateTime.parse("2022-01-07 15:00:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        //1.2 获取开始时间
+        DateTime startDateTime = endDateTime.minusDays(10);
+        Date startTime = startDateTime.toDate();
+        //TODO MOCKDATA
+        startTime=DateTime.parse("2022-01-01 09:30:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        //2.调用mapper接口获取查询的集合信息-方案1
+        List<Stock4EvrDayDomain> data= stockRtInfoMapper.getStockInfo4EvrDay(code,startTime,endTime);
+        //3.组装数据，响应
+        return R.ok(data);
     }
 }
