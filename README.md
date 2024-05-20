@@ -133,9 +133,9 @@ CommonConfig添加
 
 略
 
+## (13) 个股分时涨跌幅度统计功能
 
-
-
+![个股分时涨跌幅度统计功能](https://github.com/Jingweiw99/my_stock/assets/101159761/a65be228-705f-4af9-90ce-d24b0900e14a)
 
 
 
