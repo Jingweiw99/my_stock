@@ -6,4 +6,8 @@ public interface StockTimerTaskService {
      */
     void getInnerMarketInfo();
     void getStockRtIndex();
+    /**
+     * 板块实时数据采集功能
+     */
+    void getBlockInfo();
 }

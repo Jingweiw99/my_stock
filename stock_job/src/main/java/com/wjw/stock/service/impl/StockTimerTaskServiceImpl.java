@@ -2,10 +2,12 @@ package com.wjw.stock.service.impl;
 
 import com.google.common.collect.Lists;
 import com.wjw.stock.constant.ParseType;
+import com.wjw.stock.mapper.StockBlockRtInfoMapper;
 import com.wjw.stock.mapper.StockBusinessMapper;
 import com.wjw.stock.mapper.StockMarketIndexInfoMapper;
 import com.wjw.stock.mapper.StockRtInfoMapper;
 import com.wjw.stock.pojo.domain.StockInfoConfig;
+import com.wjw.stock.pojo.entity.StockBlockRtInfo;
 import com.wjw.stock.pojo.entity.StockBusiness;
 import com.wjw.stock.pojo.entity.StockMarketIndexInfo;
 import com.wjw.stock.pojo.entity.StockRtInfo;
@@ -44,7 +46,8 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
     private StockBusinessMapper stockBusinessMapper;
     @Autowired
     private StockRtInfoMapper stockRtInfoMapper;
-
+    @Autowired
+    private StockBlockRtInfoMapper stockBlockRtInfoMapper;
     @Override
     public void getInnerMarketInfo() {
         //1.定义采集的url接口
@@ -104,5 +107,23 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
             }
             log.info("插入成功:影响{}行数据", i);
         });
+    }
+
+    @Override
+    public void getBlockInfo() {
+        HttpHeaders header = new HttpHeaders();
+        header.add("Referer", "https://finance.sina.com.cn/stock/");
+        HttpEntity entity = new HttpEntity(header);
+        String blockUrl = stockInfoConfig.getBlockUrl();
+        String strInfo = restTemplate.postForObject(blockUrl, entity, String.class);
+        log.info("获取板块行业数据的str:{}", strInfo);
+        // 穿过来的是一个类似js的对象
+        List<StockBlockRtInfo> lists = parserStockInfoUtil.parse4StockBlock(strInfo);
+        int i = stockBlockRtInfoMapper.insertStockBlock(lists);
+        if(i == 0) {
+            log.info("插入失败");
+        } else {
+            log.info("插入成功");
+        }
     }
 }

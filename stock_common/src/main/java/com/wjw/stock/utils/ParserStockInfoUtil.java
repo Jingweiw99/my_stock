@@ -1,17 +1,18 @@
 package com.wjw.stock.utils;
 
 import com.google.common.base.Strings;
+import com.google.gson.Gson;
+import com.wjw.stock.pojo.entity.StockBlockRtInfo;
 import com.wjw.stock.pojo.entity.StockMarketIndexInfo;
 import com.wjw.stock.pojo.entity.StockOuterMarketIndexInfo;
 import com.wjw.stock.pojo.entity.StockRtInfo;
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ParserStockInfoUtil {
     public ParserStockInfoUtil(IdWorker idWorker) {
@@ -180,5 +181,49 @@ public class ParserStockInfoUtil {
                 .curTime(curTime)
                 .build();
         return smi;
+    }
+
+    /**
+     * 转化板块数据获取集合信息
+     * @param stockStr
+     * @return
+     */
+    public List<StockBlockRtInfo> parse4StockBlock(String stockStr){
+        if (Strings.isNullOrEmpty(stockStr)|| !stockStr.contains("=")){
+            return Collections.emptyList();
+        }
+        String jsonStr = stockStr.substring(stockStr.indexOf("=") + 1);
+        // 前端js对象（json），转换为后端的HashMap
+        HashMap mapInfo = new Gson().fromJson(jsonStr, HashMap.class);
+        System.out.println(mapInfo);
+        List<StockBlockRtInfo> collect = (List<StockBlockRtInfo>) mapInfo.values().stream().map(restStr -> {
+            String infos = (String) restStr;
+            String[] infoArray = infos.split(",");
+            //板块编码
+            String label = infoArray[0];
+            //板块行业
+            String blockName = infoArray[1];
+            //板块公司数量
+            Integer companyNum = Integer.valueOf(infoArray[2]);
+            //均价
+            BigDecimal avgPrice = new BigDecimal(infoArray[3]);
+            //涨跌幅度
+            BigDecimal priceLimit = new BigDecimal(infoArray[5]);
+            //涨跌率
+            //BigDecimal updownRate=new BigDecimal(infoArray[5]);
+            //总成交量
+            Long tradeAmount = Long.valueOf(infoArray[6]);
+            //总成交金额
+            BigDecimal tradeVolume = new BigDecimal(infoArray[7]);
+            //当前日期
+            Date now=DateTimeUtil.getDateTimeWithoutSecond(DateTime.now()).toDate();
+            //构建板块信息对象
+            StockBlockRtInfo blockRtInfo = StockBlockRtInfo.builder().id(idWorker.nextId()).label(label)
+                    .blockName(blockName).companyNum(companyNum).avgPrice(avgPrice).curTime(now)
+                    .updownRate(priceLimit).tradeAmount(tradeAmount).tradeVolume(tradeVolume)
+                    .build();
+            return blockRtInfo;
+        }).collect(Collectors.toList());
+        return collect;
     }
 }
