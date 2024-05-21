@@ -26,4 +26,8 @@ public class StockTimerTaskServiceTest {
     public void test02() {
         stockTimerTaskService.getStockRtIndex();
     }
+    @Test
+    public void test03(){
+        stockTimerTaskService.getBlockInfo();
+    }
 }
