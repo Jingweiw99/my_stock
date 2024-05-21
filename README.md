@@ -153,8 +153,14 @@ CommonConfig添加
 ![拆分后的日k线png](https://github.com/Jingweiw99/my_stock/assets/101159761/ab6d47af-7802-4875-89fd-e09755d2bf30)
 
 
+## (17) stock_job 环境配置
 
+![完成stock_job环境配置](https://github.com/Jingweiw99/my_stock/assets/101159761/46fa801b-406b-44b7-b041-e2d8231fdfd2)
 
+ 
+## (18) A股大盘数据采集服务
+
+![A股大盘数据采集服务](https://github.com/Jingweiw99/my_stock/assets/101159761/1fe8ff48-0fe5-4956-9d31-eb91e50a7d13)
 
 
 
