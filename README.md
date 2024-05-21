@@ -166,8 +166,14 @@ CommonConfig添加
 
 ![A股大盘数据批量入库服务](https://github.com/Jingweiw99/my_stock/assets/101159761/6631d698-16e6-4815-97e8-615294b00b03)
 
+## (20) A股个股数据采集服务
 
+![A股个股数据采集服务](https://github.com/Jingweiw99/my_stock/assets/101159761/8019b74a-7979-4f07-b1ac-fa1009284f77)
 
+## (21) A股票个股数据分批次入库服务
+中间加了分批次采集，但是是单线程连续执行，后续可以用多线程优化。
+
+![A股个股数据批量入库服务](https://github.com/Jingweiw99/my_stock/assets/101159761/32560f24-d019-4234-9cbc-34ce9b0110ac)
 
 
 
