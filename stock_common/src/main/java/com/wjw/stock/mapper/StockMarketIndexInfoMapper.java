@@ -31,4 +31,9 @@ public interface StockMarketIndexInfoMapper {
     List<InnerMarketDomain> getMarketInfo(@Param("inners") List<String> inners, @Param("lastDate") Date lastDate);
 
     List<Map> getTradeAmt(@Param("markedIds") List<String> markedIds, @Param("startDate") Date startTime4PreT, @Param("endDate") Date endTime4PreT);
+    /**
+     * 批量插入股票大盘数据
+     * @param infos
+     */
+    int insertBatch(@Param("infos") List<StockMarketIndexInfo> infos);
 }
