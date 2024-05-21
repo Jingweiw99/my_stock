@@ -175,7 +175,9 @@ CommonConfig添加
 
 ![A股个股数据批量入库服务](https://github.com/Jingweiw99/my_stock/assets/101159761/32560f24-d019-4234-9cbc-34ce9b0110ac)
 
+## (22) 板块行业实时数据采集和入库功能服务
 
+![板块实时数据采集和入库功能服务](https://github.com/Jingweiw99/my_stock/assets/101159761/debf1641-b23b-4fc4-8bd2-b47d11f11b38)
 
 
 
