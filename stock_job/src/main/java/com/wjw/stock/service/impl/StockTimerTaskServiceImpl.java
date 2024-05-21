@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.wjw.stock.constant.ParseType;
 import com.wjw.stock.mapper.StockBusinessMapper;
 import com.wjw.stock.mapper.StockMarketIndexInfoMapper;
+import com.wjw.stock.mapper.StockRtInfoMapper;
 import com.wjw.stock.pojo.domain.StockInfoConfig;
 import com.wjw.stock.pojo.entity.StockBusiness;
 import com.wjw.stock.pojo.entity.StockMarketIndexInfo;
@@ -41,6 +42,8 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
     private ParserStockInfoUtil parserStockInfoUtil;
     @Autowired
     private StockBusinessMapper stockBusinessMapper;
+    @Autowired
+    private StockRtInfoMapper stockRtInfoMapper;
 
     @Override
     public void getInnerMarketInfo() {
@@ -93,8 +96,13 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
             String result = restTemplate.postForObject(stockUrl, entity, String.class);
             List<StockRtInfo> infos = parserStockInfoUtil.parser4StockOrMarketInfo(result, ParseType.ASHARE);
             log.info("数据量：{}", infos.size());
-            //TODO 批量插入
-
+            // 批量插入
+            int i = stockRtInfoMapper.insertBatch(infos);
+            if (i <= 0) {
+                log.info("插入失败:影响{}行数据", i);
+                return;
+            }
+            log.info("插入成功:影响{}行数据", i);
         });
     }
 }

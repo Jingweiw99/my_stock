@@ -24,6 +24,8 @@ public interface StockRtInfoMapper {
 
     int insertSelective(StockRtInfo record);
 
+    int insertBatch(@Param("lists") List<StockRtInfo> stockRtInfoList);
+
     StockRtInfo selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(StockRtInfo record);
@@ -43,4 +45,5 @@ public interface StockRtInfoMapper {
     List<Date> getStockCloseDates(@Param("code") String code, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
     List<Stock4EvrDayDomain> getStockInfo4Day2(@Param("code") String code, @Param("dates") List<Date> closeDates);
+
 }
