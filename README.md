@@ -203,6 +203,13 @@ CommonConfig添加
 
 ![mq+caffiine推送实时信息并缓存](https://github.com/Jingweiw99/my_stock/assets/101159761/182c80e6-88ac-4ff5-8ffc-da6e91e03ba3)
 
+## (24) 服务器外部环境配置
+
+![服务器外部环境配置xxl-job](https://github.com/Jingweiw99/my_stock/assets/101159761/8844d4b4-e974-49d4-82a1-aa483957eea0)
+
+## (25) job工程集成xxl-job
+
+![job工程集成xxl-job](https://github.com/Jingweiw99/my_stock/assets/101159761/c4de3b48-ffc2-4a0f-b748-7df928b48b26)
 
 
 
