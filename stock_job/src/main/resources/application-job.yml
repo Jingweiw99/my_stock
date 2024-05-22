@@ -1,0 +1,15 @@
+# XXJOB参数配置
+logging:
+  config: classpath:logback.xml
+xxl:
+  job:
+    accessToken:
+    admin:
+      addresses: http://192.168.60.128:8093/xxl-job-admin # 服务地址
+    executor:
+      appname: wjw-stock-job-executor # 执行器名称
+      address:
+      ip:
+      port: 6666 # 心跳检测端口
+      logpath: .\logs # 配置log存放后的路径
+      logretentiondays: 30
