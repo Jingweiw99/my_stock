@@ -179,7 +179,29 @@ CommonConfig添加
 
 ![板块实时数据采集和入库功能服务](https://github.com/Jingweiw99/my_stock/assets/101159761/debf1641-b23b-4fc4-8bd2-b47d11f11b38)
 
+## (23) mq同步最新股票数据，并添加本地缓存
 
+目前项目存在的问题：
+
+当job工程采集到数据之后，往mysql里面批量插入数据。
+然后backend工程，获取插入数据然后实时展示。
+这里肯定会遇到数据库的高频io。
+
+为了解决这个问题，我们可以加入缓存。
+这里采取的是本地缓存caffine
+
+然后通过rabbitmq一分钟推送一次最新 的消息到主工程保存 ，返回给前端展示。
+如果是已经本地缓存的优先走缓存。
+
+这里还不够完善，后续添加定时任务框架和线程池技术优化。
+
+配置: 
+
+![rabbitmq,caffine环境配置png](https://github.com/Jingweiw99/my_stock/assets/101159761/160d47aa-3b7b-4459-a303-e5b53ad5d524)
+
+使用：
+
+![mq+caffiine推送实时信息并缓存](https://github.com/Jingweiw99/my_stock/assets/101159761/182c80e6-88ac-4ff5-8ffc-da6e91e03ba3)
 
 
 
