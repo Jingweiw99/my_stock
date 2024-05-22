@@ -1,6 +1,7 @@
 package com.wjw.stock.service.impl;
 
 import com.alibaba.excel.EasyExcel;
+import com.github.benmanes.caffeine.cache.Cache;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wjw.stock.mapper.StockBlockRtInfoMapper;
@@ -37,7 +38,8 @@ public class StockServiceImpl implements StockService {
 
     @Autowired
     private StockInfoConfig stockInfoConfig;
-
+    @Autowired
+    private Cache<String, Object> caffeineCache;
 
     /**
      * 获取国内大盘的实时数据
@@ -46,16 +48,20 @@ public class StockServiceImpl implements StockService {
      */
     @Override
     public R<List<InnerMarketDomain>> innerIndexAll() {
-        //1.获取国内A股大盘的id集合
-        List<String> inners = stockInfoConfig.getInner();
-        //2.获取最近股票交易日期
-        Date lastDate = DateTimeUtil.getLastDate4Stock(DateTime.now()).toDate();
-        //TODO: mock测试数据，后期数据通过第三方接口动态获取实时数据 可删除
-        lastDate = DateTime.parse("2022-01-02 09:32:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
-        //3.将获取的java Date传入接口
-        List<InnerMarketDomain> list = stockMarketIndexInfoMapper.getMarketInfo(inners, lastDate);
-        //4.返回查询结果
-        return R.ok(list);
+        // 0. 优先缓存拿
+        R<List<InnerMarketDomain>> data = (R<List<InnerMarketDomain>>) caffeineCache.get("innerMarketInfos", key -> {
+            //1.获取国内A股大盘的id集合
+            List<String> inners = stockInfoConfig.getInner();
+            //2.获取最近股票交易日期
+            Date lastDate = DateTimeUtil.getLastDate4Stock(DateTime.now()).toDate();
+            // 现在已经可以实时采集数据，入库，然后获取返回给前端了
+//            lastDate = DateTime.parse("2022-01-02 09:32:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+            //3.将获取的java Date传入接口
+            List<InnerMarketDomain> list = stockMarketIndexInfoMapper.getMarketInfo(inners, lastDate);
+            //4.返回查询结果
+            return R.ok(list);
+        });
+        return data;
     }
 
 
@@ -240,16 +246,16 @@ public class StockServiceImpl implements StockService {
         DateTime endDateTime = DateTimeUtil.getLastDate4Stock(DateTime.now());
         Date endTime = endDateTime.toDate();
         //TODO MOCKDATA
-        endTime=DateTime.parse("2022-01-07 15:00:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        endTime = DateTime.parse("2022-01-07 15:00:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
         //1.2 获取开始时间
         DateTime startDateTime = endDateTime.minusDays(10);
         Date startTime = startDateTime.toDate();
         //TODO MOCKDATA
-        startTime=DateTime.parse("2022-01-01 09:30:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        startTime = DateTime.parse("2022-01-01 09:30:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
         //2.调用mapper接口获取查询的集合信息-方案1
 //        List<Stock4EvrDayDomain> data= stockRtInfoMapper.getStockInfo4EvrDay(code,startTime,endTime);
         // 方案2
-        List<Date> closeDates =  stockRtInfoMapper.getStockCloseDates(code, startTime,endTime);
+        List<Date> closeDates = stockRtInfoMapper.getStockCloseDates(code, startTime, endTime);
         List<Stock4EvrDayDomain> data = stockRtInfoMapper.getStockInfo4Day2(code, closeDates);
         //3.组装数据，响应
         return R.ok(data);

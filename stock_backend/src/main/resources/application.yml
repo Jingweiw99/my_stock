@@ -22,6 +22,7 @@ spring:
     include:
       - cache
       - stock
+      - mq
 # 配置mybatis
 mybatis:
   type-aliases-package: com.wjw.stock.pojo.entity

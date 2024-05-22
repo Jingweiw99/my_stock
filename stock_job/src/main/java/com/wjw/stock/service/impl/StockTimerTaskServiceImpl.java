@@ -16,6 +16,7 @@ import com.wjw.stock.utils.DateTimeUtil;
 import com.wjw.stock.utils.IdWorker;
 import com.wjw.stock.utils.ParserStockInfoUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +50,8 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
     private StockRtInfoMapper stockRtInfoMapper;
     @Autowired
     private StockBlockRtInfoMapper stockBlockRtInfoMapper;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     @Override
     public void getInnerMarketInfo() {
         //1.定义采集的url接口
@@ -72,6 +76,8 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
         // 批量插入功能
         int count = this.stockMarketIndexInfoMapper.insertBatch(list);
         log.info("批量插入了：{}条数据", count);
+        // 插入成功之后通知stockExchange交换机，通过inner.market key 到绑定的innerMarketQueue 队列，发送当前时间  (这里定时发送，不会出现数据重复的问题)
+        rabbitTemplate.convertAndSend("stockExchange","inner.market",new Date());
     }
 
     /**
