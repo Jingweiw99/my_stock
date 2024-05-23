@@ -211,7 +211,13 @@ CommonConfig添加
 
 ![job工程集成xxl-job](https://github.com/Jingweiw99/my_stock/assets/101159761/c4de3b48-ffc2-4a0f-b748-7df928b48b26)
 
+## (26) 国内A股大盘周期采集
 
+![国内A股大盘周期采集](https://github.com/Jingweiw99/my_stock/assets/101159761/0deb3bb9-088a-4cf5-933e-59ccb2972877)
+
+## (27) 线程池引入和优化采集，入库工作
+
+![线程池引入和优化采集，入库工作](https://github.com/Jingweiw99/my_stock/assets/101159761/e7f9828d-73ca-46ee-8552-568967a6e50e)
 
 
 
