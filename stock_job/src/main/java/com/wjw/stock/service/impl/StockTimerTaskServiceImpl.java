@@ -20,6 +20,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -52,6 +53,9 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
     private StockBlockRtInfoMapper stockBlockRtInfoMapper;
     @Autowired
     private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
     @Override
     public void getInnerMarketInfo() {
         //1.定义采集的url接口
@@ -77,7 +81,7 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
         int count = this.stockMarketIndexInfoMapper.insertBatch(list);
         log.info("批量插入了：{}条数据", count);
         // 插入成功之后通知stockExchange交换机，通过inner.market key 到绑定的innerMarketQueue 队列，发送当前时间  (这里定时发送，不会出现数据重复的问题)
-        rabbitTemplate.convertAndSend("stockExchange","inner.market",new Date());
+        rabbitTemplate.convertAndSend("stockExchange", "inner.market", new Date());
     }
 
     /**
@@ -97,21 +101,24 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
         headers.add("Referer", "https://finance.sina.com.cn/stock/");
         headers.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36");
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        //一次性查询过多，我们将需要查询的数据先进行分片处理，每次最多查询20条股票数据
         Lists.partition(stockIds, 20).forEach(list -> {
-            //拼接股票url地址
-            String stockUrl = stockInfoConfig.getMarketUrl() + String.join(",", list);
-            //获取响应数据
-            String result = restTemplate.postForObject(stockUrl, entity, String.class);
-            List<StockRtInfo> infos = parserStockInfoUtil.parser4StockOrMarketInfo(result, ParseType.ASHARE);
-            log.info("数据量：{}", infos.size());
-            // 批量插入
-            int i = stockRtInfoMapper.insertBatch(infos);
-            if (i <= 0) {
-                log.info("插入失败:影响{}行数据", i);
-                return;
-            }
-            log.info("插入成功:影响{}行数据", i);
+            // 分片这里修改为线程池多线程并行获取，插入数据
+            threadPoolTaskExecutor.execute(() -> {
+                //拼接股票url地址
+                String stockUrl = stockInfoConfig.getMarketUrl() + String.join(",", list);
+                //获取响应数据
+                String result = restTemplate.postForObject(stockUrl, entity, String.class);
+                List<StockRtInfo> infos = parserStockInfoUtil.parser4StockOrMarketInfo(result, ParseType.ASHARE);
+                log.info("数据量：{}", infos.size());
+                // 批量插入
+                int i = stockRtInfoMapper.insertBatch(infos);
+                if (i <= 0) {
+                    log.info("插入失败:影响{}行数据", i);
+                    return;
+                }
+                log.info("插入成功:影响{}行数据", i);
+            });
+
         });
     }
 
@@ -126,7 +133,7 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
         // 穿过来的是一个类似js的对象
         List<StockBlockRtInfo> lists = parserStockInfoUtil.parse4StockBlock(strInfo);
         int i = stockBlockRtInfoMapper.insertStockBlock(lists);
-        if(i == 0) {
+        if (i == 0) {
             log.info("插入失败");
         } else {
             log.info("插入成功");

@@ -22,6 +22,7 @@ spring:
       - stock
       - mq
       - job
+      - pool
 # 配置mybatis
 mybatis:
   type-aliases-package: com.wjw.stock.pojo.* # 配置实体类扫描，取别名
